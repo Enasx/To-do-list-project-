@@ -2,13 +2,13 @@ import requests
 
 
 
-operation="sdf"
+operation="add"
 new_task_data = {"task_id": 7, "task": "Reading"}
 complete_task_data = {"task_id": 2}
 
 
 if operation == "list" :
-    response=requests.get(f"http://localhost:8000/list")
+    response=requests.get("http://localhost:8000/list")
     
 
 elif operation == "add" :
@@ -21,14 +21,15 @@ elif operation == "delete":
     response = requests.get("http://localhost:8000/delete/")
 
 else:
-    print("Invalid operation. Supported operations: list, add, complete, delete")
+    print("Invalid operation. Please select from these operations: list, add, complete, delete")
+    response=None
 
 
 
-
-if response.status_code==200 :
-    print(response.json()) 
-else:
-    print(response.text)
+if response :
+    if response.status_code==200 :
+        print(response.json()) 
+    else:
+        print(response.text)
     
 
