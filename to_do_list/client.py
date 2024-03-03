@@ -2,7 +2,7 @@ import requests
 
 operation="add"
 new_task_data = {"new_task": "sleeping"}
-complete_task_data = {"task_idd": 10}
+complete_task_data = {"task_id": 10}
 
 
 if operation == "list" :
