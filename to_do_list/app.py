@@ -28,10 +28,7 @@ async def read_list():
 @app.post("/add/")
 async def add_task(new_task: str):
     list = get_list()
-    if len(list) == 0:
-        new_task_id=1
-    else:
-        new_task_id = max(task.task_id for task in list) + 1
+    new_task_id = max([task.task_id for task in list], default=0) + 1
     task_model = Task(task_id=new_task_id, task=new_task)
     list.append(task_model)
     write_tasks(list)
@@ -49,11 +46,10 @@ async def complete_task(task_id: int):
 
 
 @app.post("/complete/")
-async def complete_task(task_idd: int):
+async def complete_task(task_id: int):
     list=get_list()
     for index, task in enumerate(list):
-        if task.task_id == task_idd:
-        #if task.task_id == task_idd:
+        if task.task_id == task_id:
             completed_task = list.pop(index)
             write_tasks(list)
             return completed_task
