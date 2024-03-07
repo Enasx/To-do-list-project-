@@ -1,6 +1,6 @@
 import requests
 
-operation = "add"
+operation = "list"
 new_task_data = {"new_task": "sleeping"}
 complete_task_data = {"task_id": 10}
 

@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY . /app
 
+
 RUN pip install fastapi
 RUN pip install "uvicorn[standard]"
 

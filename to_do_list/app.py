@@ -38,16 +38,6 @@ async def add_task(new_task: str):
     return task_model
 
 
-""" @app.post("/complete/")
-async def complete_task(task_id: int):
-    list=get_list()
-    if task_id < 0 or task_id >= len(list): #make it a search func
-        raise HTTPException(status_code=404, detail="Task not found")
-    completed_task = list.pop(task_id)
-    write_tasks(list)
-    return completed_task """
-
-
 @app.post("/complete/")
 async def complete_task(task_id: int):
     list = get_list()
