@@ -13,17 +13,20 @@ class Task(BaseModel):
 
 def get_list():
     with open("list_module.json", "r") as file:
-       list_data = json.load(file)
-    return [Task(**task_data) for task_data in list_data]
+        list_data = json.load(file)
+        return [Task(**task_data) for task_data in list_data]
+
 
 def write_tasks(list):
-    list_data = [{"task_id": task.task_id, "task": task.task} for task in list] 
+    list_data = [{"task_id": task.task_id, "task": task.task} for task in list]
     with open("list_module.json", "w") as file:
         json.dump(list_data, file)
+
 
 @app.get("/list/")
 async def read_list():
     return get_list()
+
 
 @app.post("/add/")
 async def add_task(new_task: str):
@@ -47,13 +50,13 @@ async def complete_task(task_id: int):
 
 @app.post("/complete/")
 async def complete_task(task_id: int):
-    list=get_list()
+    list = get_list()
     for index, task in enumerate(list):
         if task.task_id == task_id:
             completed_task = list.pop(index)
             write_tasks(list)
             return completed_task
-    
+
     raise HTTPException(status_code=404, detail="Task not found")
 
 
@@ -63,9 +66,3 @@ async def delete_list():
     list = []
     write_tasks(list)
     return list
-
-
-
-
-
-
