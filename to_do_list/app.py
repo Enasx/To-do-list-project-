@@ -1,26 +1,13 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import json
-
+from db_interface import DBInterface
 
 app = FastAPI()
-
-
-class Task(BaseModel):
-    task_id: int
-    task: str
+db_interface = DBInterface()
 
 
 def get_list():
-    with open("list_module.json", "r") as file:
-        list_data = json.load(file)
-        return [Task(**task_data) for task_data in list_data]
-
-
-def write_tasks(list):
-    list_data = [{"task_id": task.task_id, "task": task.task} for task in list]
-    with open("list_module.json", "w") as file:
-        json.dump(list_data, file)
+    list_data = db_interface.get_all_tasks()
+    return list_data
 
 
 @app.get("/list/")
@@ -30,29 +17,25 @@ async def read_list():
 
 @app.post("/add/")
 async def add_task(new_task: str):
-    list = get_list()
-    new_task_id = max([task.task_id for task in list], default=0) + 1
-    task_model = Task(task_id=new_task_id, task=new_task)
-    list.append(task_model)
-    write_tasks(list)
-    return task_model
+    db_interface.create_task(new_task)
+    return new_task
 
 
 @app.post("/complete/")
 async def complete_task(task_id: int):
-    list = get_list()
-    for index, task in enumerate(list):
-        if task.task_id == task_id:
-            completed_task = list.pop(index)
-            write_tasks(list)
-            return completed_task
-
-    raise HTTPException(status_code=404, detail="Task not found")
+    task = db_interface.delete_task(task_id)
+    if task is not None:
+        return f"Task {task_id} deleted successfully!"
+    else:
+        raise HTTPException(status_code=404, detail="Task not found")
 
 
 @app.get("/delete/")
 async def delete_list():
-    global list
-    list = []
-    write_tasks(list)
-    return list
+    db_interface.delete_all_tasks()
+    return get_list()
+
+
+# @app.on_event("startup")
+# async def startup_event():
+#     db_interface.initialize_database()

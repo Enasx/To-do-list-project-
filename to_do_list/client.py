@@ -1,8 +1,8 @@
 import requests
 
-operation = "list"
-new_task_data = {"new_task": "sleeping"}
-complete_task_data = {"task_id": 10}
+operation = "delete"
+new_task_data = {"new_task": "asda"}
+complete_task_data = {"task_id": 1}
 
 
 if operation == "list":
