@@ -1,28 +1,37 @@
 import requests
 
-operation = "delete"
-new_task_data = {"new_task": "asda"}
-complete_task_data = {"task_id": 1}
+base_url = "http://localhost:8000"
 
 
-if operation == "list":
-    response = requests.get("http://localhost:8000/list")
+def get_input():
+    print("Choose an operation: list, add, complete, delete or exit.")
+    operation = input("Operation: ")
+
+    if operation == "add":
+        new_task = input("Enter the new task: ")
+        data = {"new_task": new_task}
+    elif operation == "complete":
+        task_id = input("Enter the task ID to complete: ")
+        data = {"task_id": int(task_id)}
+    else:
+        data = {}
+
+    return operation, data
 
 
-elif operation == "add":
-    response = requests.post("http://localhost:8000/add/", params=new_task_data)
+while True:
+    operation, data = get_input()
 
-elif operation == "complete":
-    response = requests.post("http://localhost:8000/complete/", params=complete_task_data)
+    if operation.lower() == "exit":
+        break
+    if operation in ["list", "delete"]:
+        response = requests.get(f"{base_url}/{operation}/")
+    elif operation in ["add", "complete"]:
+        response = requests.post(f"{base_url}/{operation}/", params=data)
+    else:
+        print("Invalid operation. Please select from these operations: list, add, complete, delete or exit.")
+        continue
 
-elif operation == "delete":
-    response = requests.get("http://localhost:8000/delete/")
-
-else:
-    print("Invalid operation. Please select from these operations: list, add, complete, delete")
-    response = None
-
-if response is not None:
     if response.status_code == 200:
         print(response.json())
     else:
