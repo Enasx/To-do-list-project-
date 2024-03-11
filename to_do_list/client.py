@@ -4,7 +4,7 @@ base_url = "http://localhost:8000"
 
 
 def get_input():
-    print("Choose an operation: list, add, complete, delete or exit.")
+    print("Choose an operationn: list, add, complete, delete or exit.")
     operation = input("Operation: ")
 
     if operation == "add":
