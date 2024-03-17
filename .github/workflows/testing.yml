@@ -1,0 +1,27 @@
+name: Testing Compatibility
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test-pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the main repository and submodules
+        uses: actions/checkout@v2
+
+      - name: Setup Linux package dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-dev
+
+      - name: Install dependencies
+        run: pip install -r to_do_list/requirments.txt
+
+      - name: Install pytest
+        run: pip install pytest==6.2.4
+
+      - name: Run all tests
+        run: pytest .
