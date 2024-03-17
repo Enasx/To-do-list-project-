@@ -39,18 +39,19 @@ class DBInterface:
         return tasks
 
     def delete_task(self, task_id):
-        try:
-            # Delete a specific task by task_id
-            session = self.Session()
-            statement = delete(self.tasks_table).where(self.tasks_table.c.task_id == task_id)
-            session.execute(statement)
-            session.commit()
-            session.close()
-            return True
-        except Exception as e:
-            # Return None if an exception occurs during deletion to be able to do http exception in app side
-            print(e)
+        # Delete a specific task by task_id
+        session = self.Session()
+        statement = delete(self.tasks_table).where(self.tasks_table.c.task_id == task_id)
+        result = session.execute(statement)
+        rows_affected = result.rowcount  # Number of rows affected by the delete operation
+        session.commit()
+        session.close()
+        if rows_affected == 0:
+            # If no rows were affected, task_id was not found
             return None
+        else:
+            # Deletion successful
+            return True
 
     def delete_all_tasks(self):
         # Delete all tasks from the database to delete the list
